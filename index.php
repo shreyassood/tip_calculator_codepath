@@ -4,8 +4,8 @@
 
 $GLOBALS["choices"] = array(10, 15, 20);
 
-$totalValid = isset($_GET["total"]) && validateTotal($_GET["total"]);
-$tipValid = isset($_GET["percentage"]) && validateTip($_GET["percentage"]);
+$totalValid = isset($_POST["total"]) && validateTotal($_POST["total"]);
+$tipValid = isset($_POST["percentage"]) && validateTip($_POST["percentage"]);
 
 function validateTotal($total) {
 	if(is_null($total)) {
@@ -66,11 +66,11 @@ function validateTip($percentage) {
 	<h2>Tippy</h2>
 
 	<p>
-		<form action="index.php">
+		<form action="index.php" method="post">
 		
 		<div
 			<?php 
-			if (isset($_GET["total"]) && !$totalValid) 
+			if (isset($_POST["total"]) && !$totalValid) 
 				{ 
 					echo 'class = "invalid"'; 
 				} 
@@ -80,8 +80,8 @@ function validateTip($percentage) {
 
 		<?php
 
-		if(isset($_GET["total"]) && $totalValid) {
-					echo 'value="' . $_GET["total"] . '"';
+		if(isset($_POST["total"]) && $totalValid) {
+					echo 'value="' . $_POST["total"] . '"';
 		} else {
 			echo 'value="0"';
 		}
@@ -96,7 +96,7 @@ function validateTip($percentage) {
 
 		<div
 			<?php 
-			if (isset($_GET["percentage"]) && !$tipValid) 
+			if (isset($_POST["percentage"]) && !$tipValid) 
 				{ 
 					echo 'class = "invalid"'; 
 				} 
@@ -110,8 +110,8 @@ function validateTip($percentage) {
 			foreach ($GLOBALS["choices"] as $choice) {
 				echo '<input type="radio" name="percentage" value="' . $choice . '"';
 
-				if(isset($_GET["percentage"]) && $tipValid) {
-					if(intval($choice, 10) == intval($_GET["percentage"], 10)) {
+				if(isset($_POST["percentage"]) && $tipValid) {
+					if(intval($choice, 10) == intval($_POST["percentage"], 10)) {
 						echo 'checked';
 					}
 				} else {
@@ -136,10 +136,10 @@ function validateTip($percentage) {
 
 					echo '<div class="result"><b>';
 
-					$subTotalAmount = intval($_GET["total"], 10);
-					$tipAmount =  $subTotalAmount * intval($_GET["percentage"], 10) / 100.0;
-					echo "Tip: $ " . $tipAmount . "\n<br/>\n";
-					echo "Total: $ " . ($tipAmount + $subTotalAmount);
+					$subTotalAmount = intval($_POST["total"], 10);
+					$tipAmount =  $subTotalAmount * intval($_POST["percentage"], 10) / 100.0;
+					printf("Tip: $%.2f\n<br />\n", $tipAmount);
+					printf("Total: $%.2f", ($tipAmount + $subTotalAmount));
 
 					echo '</b></div>';
 				}
