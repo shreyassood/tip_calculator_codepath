@@ -4,6 +4,9 @@
 
 $GLOBALS["choices"] = array(10, 15, 20);
 
+$totalValid = isset($_GET["total"]) && validateTotal($_GET["total"]);
+$tipValid = isset($_GET["percentage"]) && validateTip($_GET["percentage"]);
+
 function validateTotal($total) {
 	if(is_null($total)) {
 		return false;
@@ -44,7 +47,7 @@ function validateTip($percentage) {
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>The HTML5 Herald</title>
+  <title>Tippy</title>
   <meta name="description" content="A simple tip-calculator app">
   <style>
   	.invalid 
@@ -60,14 +63,14 @@ function validateTip($percentage) {
 </head>
 
 <body>
-	<h2>Tip Calculator</h2>
+	<h2>Tippy</h2>
 
 	<p>
 		<form action="index.php">
 		
 		<div
 			<?php 
-			if (!isset($_GET["total"]) || !validateTotal($_GET["total"])) 
+			if (isset($_GET["total"]) && !$totalValid) 
 				{ 
 					echo 'class = "invalid"'; 
 				} 
@@ -77,7 +80,7 @@ function validateTip($percentage) {
 
 		<?php
 
-		if(isset($_GET["total"]) && validateTotal($_GET["total"])) {
+		if(isset($_GET["total"]) && $totalValid) {
 					echo 'value="' . $_GET["total"] . '"';
 		} else {
 			echo 'value="0"';
@@ -93,7 +96,7 @@ function validateTip($percentage) {
 
 		<div
 			<?php 
-			if (!isset($_GET["percentage"]) || !validateTip($_GET["percentage"])) 
+			if (isset($_GET["percentage"]) && !$tipValid) 
 				{ 
 					echo 'class = "invalid"'; 
 				} 
@@ -107,7 +110,7 @@ function validateTip($percentage) {
 			foreach ($GLOBALS["choices"] as $choice) {
 				echo '<input type="radio" name="percentage" value="' . $choice . '"';
 
-				if(isset($_GET["percentage"]) && validateTip($_GET["percentage"])) {
+				if(isset($_GET["percentage"]) && $tipValid) {
 					if(intval($choice, 10) == intval($_GET["percentage"], 10)) {
 						echo 'checked';
 					}
@@ -117,7 +120,7 @@ function validateTip($percentage) {
 					}
 				}
 
-				echo '>' . $choice .' $';
+				echo '>' . $choice .'%';
 			}
 
 	  		?>
@@ -129,10 +132,7 @@ function validateTip($percentage) {
 
 		<br />
 			<?php 
-			if(isset($_GET["percentage"]) 
-				&& validateTip($_GET["percentage"])
-				&& isset($_GET["total"]) 
-				&& validateTotal($_GET["total"])) {
+			if($tipValid && $totalValid) {
 
 					echo '<div class="result"><b>';
 
