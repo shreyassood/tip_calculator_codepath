@@ -51,6 +51,11 @@ function validateTip($percentage) {
   	{
   		color : red;
   	}
+  	.result 
+  	{
+  		padding: 1em;
+  		background-color:skyblue;
+  	}
   </style>
 </head>
 
@@ -74,6 +79,8 @@ function validateTip($percentage) {
 
 		if(isset($_GET["total"]) && validateTotal($_GET["total"])) {
 					echo 'value="' . $_GET["total"] . '"';
+		} else {
+			echo 'value="0"';
 		}
 		
 		?>
@@ -104,6 +111,10 @@ function validateTip($percentage) {
 					if(intval($choice, 10) == intval($_GET["percentage"], 10)) {
 						echo 'checked';
 					}
+				} else {
+					if($choice == 10) {
+						echo 'checked';
+					}
 				}
 
 				echo '>' . $choice .' $';
@@ -113,9 +124,27 @@ function validateTip($percentage) {
   		</div>
 
   		<br/>
-  		<br/>
   		<input type="submit">
 		</form>
+
+		<br />
+			<?php 
+			if(isset($_GET["percentage"]) 
+				&& validateTip($_GET["percentage"])
+				&& isset($_GET["total"]) 
+				&& validateTotal($_GET["total"])) {
+
+					echo '<div class="result"><b>';
+
+					$subTotalAmount = intval($_GET["total"], 10);
+					$tipAmount =  $subTotalAmount * intval($_GET["percentage"], 10) / 100.0;
+					echo "Tip: $ " . $tipAmount . "\n<br/>\n";
+					echo "Total: $ " . ($tipAmount + $subTotalAmount);
+
+					echo '</b></div>';
+				}
+			?>
+
 	</p>
 </body>
 
